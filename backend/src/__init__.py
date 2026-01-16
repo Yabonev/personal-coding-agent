@@ -1,0 +1,1 @@
+"""Personal coding agent application."""

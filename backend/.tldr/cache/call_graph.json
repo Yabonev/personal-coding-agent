@@ -1,0 +1,548 @@
+{
+  "edges": [
+    {
+      "from_file": "tests/test_stream_response_processor.py",
+      "from_func": "test_processes_reasoning_chunks",
+      "to_file": "tests/test_stream_response_processor.py",
+      "to_func": "MockChunk"
+    },
+    {
+      "from_file": "tests/test_console_output.py",
+      "from_func": "test_display_content_subsequent",
+      "to_file": "src/ui/console_output.py",
+      "to_func": "ConsoleOutput"
+    },
+    {
+      "from_file": "tests/test_stream_response_processor.py",
+      "from_func": "test_updates_message_repository",
+      "to_file": "tests/test_stream_response_processor.py",
+      "to_func": "MockChunk"
+    },
+    {
+      "from_file": "tests/test_stream_response_processor.py",
+      "from_func": "test_handles_multiline_content",
+      "to_file": "src/processors/stream_response_processor.py",
+      "to_func": "StreamResponseProcessor"
+    },
+    {
+      "from_file": "src/orchestrators/chat_orchestrator.py",
+      "from_func": "__init__",
+      "to_file": "src/services/message_repository.py",
+      "to_func": "MessageRepository"
+    },
+    {
+      "from_file": "src/orchestrators/chat_orchestrator.py",
+      "from_func": "__init__",
+      "to_file": "src/ui/console_output.py",
+      "to_func": "ConsoleOutput"
+    },
+    {
+      "from_file": "tests/test_chat_api_service.py",
+      "from_func": "test_create_streaming_completion_with_multiple_messages",
+      "to_file": "src/models/config.py",
+      "to_func": "ChatConfig"
+    },
+    {
+      "from_file": "tests/test_console_output.py",
+      "from_func": "test_display_error",
+      "to_file": "src/ui/console_output.py",
+      "to_func": "ConsoleOutput"
+    },
+    {
+      "from_file": "tests/test_stream_response_processor.py",
+      "from_func": "test_stops_spinner_on_reasoning",
+      "to_file": "src/processors/stream_response_processor.py",
+      "to_func": "StreamResponseProcessor"
+    },
+    {
+      "from_file": "tests/test_stream_response_processor.py",
+      "from_func": "test_processes_reasoning_chunks",
+      "to_file": "src/services/message_repository.py",
+      "to_func": "MessageRepository"
+    },
+    {
+      "from_file": "tests/test_console_output.py",
+      "from_func": "test_display_info",
+      "to_file": "src/ui/console_output.py",
+      "to_func": "ConsoleOutput"
+    },
+    {
+      "from_file": "tests/test_stream_response_processor.py",
+      "from_func": "test_updates_message_repository",
+      "to_file": "src/services/message_repository.py",
+      "to_func": "MessageRepository"
+    },
+    {
+      "from_file": "tests/test_config_service.py",
+      "from_func": "test_create_chat_config_partial_overrides",
+      "to_file": "src/config/config_service.py",
+      "to_func": "ConfigService"
+    },
+    {
+      "from_file": "tests/test_chat_orchestrator.py",
+      "from_func": "test_run_error_handling_continues_loop",
+      "to_file": "tests/test_chat_orchestrator.py",
+      "to_func": "config"
+    },
+    {
+      "from_file": "tests/test_chat_orchestrator.py",
+      "from_func": "test_run_keyboard_interrupt",
+      "to_file": "src/orchestrators/chat_orchestrator.py",
+      "to_func": "ChatOrchestrator"
+    },
+    {
+      "from_file": "tests/test_stream_response_processor.py",
+      "from_func": "test_error_handling_stops_spinner",
+      "to_file": "src/processors/stream_response_processor.py",
+      "to_func": "StreamResponseProcessor"
+    },
+    {
+      "from_file": "tests/test_stream_response_processor.py",
+      "from_func": "test_handles_empty_chunks",
+      "to_file": "src/processors/stream_response_processor.py",
+      "to_func": "StreamResponseProcessor"
+    },
+    {
+      "from_file": "tests/test_console_output.py",
+      "from_func": "test_display_content_first_without_reasoning",
+      "to_file": "src/ui/console_output.py",
+      "to_func": "ConsoleOutput"
+    },
+    {
+      "from_file": "tests/test_chat_api_service.py",
+      "from_func": "test_initialization",
+      "to_file": "src/models/config.py",
+      "to_func": "ChatConfig"
+    },
+    {
+      "from_file": "tests/test_stream_response_processor.py",
+      "from_func": "test_processes_content_chunks",
+      "to_file": "src/services/message_repository.py",
+      "to_func": "MessageRepository"
+    },
+    {
+      "from_file": "tests/test_chat_orchestrator.py",
+      "from_func": "test_run_exit_command",
+      "to_file": "src/orchestrators/chat_orchestrator.py",
+      "to_func": "ChatOrchestrator"
+    },
+    {
+      "from_file": "tests/test_stream_response_processor.py",
+      "from_func": "test_handles_empty_response",
+      "to_file": "src/processors/stream_response_processor.py",
+      "to_func": "StreamResponseProcessor"
+    },
+    {
+      "from_file": "tests/test_chat_orchestrator.py",
+      "from_func": "test_initialization",
+      "to_file": "src/orchestrators/chat_orchestrator.py",
+      "to_func": "ChatOrchestrator"
+    },
+    {
+      "from_file": "tests/test_chat_orchestrator.py",
+      "from_func": "test_process_user_message_error_handling",
+      "to_file": "tests/test_chat_orchestrator.py",
+      "to_func": "config"
+    },
+    {
+      "from_file": "tests/test_console_output.py",
+      "from_func": "test_newline",
+      "to_file": "src/ui/console_output.py",
+      "to_func": "ConsoleOutput"
+    },
+    {
+      "from_file": "tests/test_chat_orchestrator.py",
+      "from_func": "test_process_user_message_flow",
+      "to_file": "tests/test_chat_orchestrator.py",
+      "to_func": "config"
+    },
+    {
+      "from_file": "src/models/message.py",
+      "from_func": "from_dict",
+      "to_file": "src/models/message.py",
+      "to_func": "MessageRole"
+    },
+    {
+      "from_file": "tests/conftest.py",
+      "from_func": "message_repository",
+      "to_file": "src/services/message_repository.py",
+      "to_func": "MessageRepository"
+    },
+    {
+      "from_file": "main.py",
+      "from_func": "main",
+      "to_file": "src/orchestrators/chat_orchestrator.py",
+      "to_func": "ChatOrchestrator"
+    },
+    {
+      "from_file": "tests/test_stream_response_processor.py",
+      "from_func": "test_processes_content_chunks",
+      "to_file": "src/processors/stream_response_processor.py",
+      "to_func": "StreamResponseProcessor"
+    },
+    {
+      "from_file": "tests/test_stream_response_processor.py",
+      "from_func": "test_error_handling_stops_spinner",
+      "to_file": "tests/test_stream_response_processor.py",
+      "to_func": "failing_chunks"
+    },
+    {
+      "from_file": "tests/test_chat_orchestrator.py",
+      "from_func": "test_should_exit",
+      "to_file": "tests/test_chat_orchestrator.py",
+      "to_func": "config"
+    },
+    {
+      "from_file": "tests/test_models.py",
+      "from_func": "test_to_dict",
+      "to_file": "src/models/message.py",
+      "to_func": "Message"
+    },
+    {
+      "from_file": "main.py",
+      "from_func": "<module>",
+      "to_file": "main.py",
+      "to_func": "main"
+    },
+    {
+      "from_file": "tests/test_stream_response_processor.py",
+      "from_func": "test_stops_spinner_on_content_without_reasoning",
+      "to_file": "tests/test_stream_response_processor.py",
+      "to_func": "MockChunk"
+    },
+    {
+      "from_file": "tests/test_stream_response_processor.py",
+      "from_func": "test_handles_multiline_content",
+      "to_file": "tests/test_stream_response_processor.py",
+      "to_func": "MockChunk"
+    },
+    {
+      "from_file": "tests/test_models.py",
+      "from_func": "test_to_dict_assistant",
+      "to_file": "src/models/message.py",
+      "to_func": "Message"
+    },
+    {
+      "from_file": "tests/test_config_service.py",
+      "from_func": "test_get_api_key_missing_raises_error",
+      "to_file": "src/config/config_service.py",
+      "to_func": "ConfigService"
+    },
+    {
+      "from_file": "tests/test_chat_orchestrator.py",
+      "from_func": "test_run_exit_command",
+      "to_file": "tests/test_chat_orchestrator.py",
+      "to_func": "config"
+    },
+    {
+      "from_file": "tests/test_chat_orchestrator.py",
+      "from_func": "test_run_error_handling_continues_loop",
+      "to_file": "src/orchestrators/chat_orchestrator.py",
+      "to_func": "ChatOrchestrator"
+    },
+    {
+      "from_file": "tests/test_console_output.py",
+      "from_func": "test_display_welcome",
+      "to_file": "src/ui/console_output.py",
+      "to_func": "ConsoleOutput"
+    },
+    {
+      "from_file": "tests/test_stream_response_processor.py",
+      "from_func": "test_processes_reasoning_chunks",
+      "to_file": "src/processors/stream_response_processor.py",
+      "to_func": "StreamResponseProcessor"
+    },
+    {
+      "from_file": "tests/test_stream_response_processor.py",
+      "from_func": "test_stops_spinner_on_content_without_reasoning",
+      "to_file": "src/services/message_repository.py",
+      "to_func": "MessageRepository"
+    },
+    {
+      "from_file": "tests/test_stream_response_processor.py",
+      "from_func": "test_processes_mixed_reasoning_and_content",
+      "to_file": "tests/test_stream_response_processor.py",
+      "to_func": "MockChunk"
+    },
+    {
+      "from_file": "tests/test_stream_response_processor.py",
+      "from_func": "test_updates_message_repository",
+      "to_file": "src/processors/stream_response_processor.py",
+      "to_func": "StreamResponseProcessor"
+    },
+    {
+      "from_file": "tests/test_config_service.py",
+      "from_func": "test_get_api_key_success",
+      "to_file": "src/config/config_service.py",
+      "to_func": "ConfigService"
+    },
+    {
+      "from_file": "src/services/message_repository.py",
+      "from_func": "add_assistant_message",
+      "to_file": "src/models/message.py",
+      "to_func": "Message"
+    },
+    {
+      "from_file": "tests/test_config_service.py",
+      "from_func": "test_get_api_key_empty_raises_error",
+      "to_file": "src/config/config_service.py",
+      "to_func": "ConfigService"
+    },
+    {
+      "from_file": "tests/test_stream_response_processor.py",
+      "from_func": "failing_chunks",
+      "to_file": "tests/test_stream_response_processor.py",
+      "to_func": "MockChunk"
+    },
+    {
+      "from_file": "tests/test_chat_api_service.py",
+      "from_func": "test_create_streaming_completion_with_multiple_messages",
+      "to_file": "src/services/chat_api_service.py",
+      "to_func": "ChatApiService"
+    },
+    {
+      "from_file": "tests/test_stream_response_processor.py",
+      "from_func": "test_processes_mixed_reasoning_and_content",
+      "to_file": "src/services/message_repository.py",
+      "to_func": "MessageRepository"
+    },
+    {
+      "from_file": "tests/test_chat_orchestrator.py",
+      "from_func": "test_should_exit",
+      "to_file": "src/orchestrators/chat_orchestrator.py",
+      "to_func": "ChatOrchestrator"
+    },
+    {
+      "from_file": "main.py",
+      "from_func": "main",
+      "to_file": "src/config/config_service.py",
+      "to_func": "ConfigService"
+    },
+    {
+      "from_file": "tests/test_console_output.py",
+      "from_func": "test_display_reasoning_indents_newlines",
+      "to_file": "src/ui/console_output.py",
+      "to_func": "ConsoleOutput"
+    },
+    {
+      "from_file": "tests/test_config_service.py",
+      "from_func": "test_create_chat_config_with_overrides",
+      "to_file": "src/config/config_service.py",
+      "to_func": "ConfigService"
+    },
+    {
+      "from_file": "src/orchestrators/chat_orchestrator.py",
+      "from_func": "__init__",
+      "to_file": "src/ui/loading_spinner.py",
+      "to_func": "LoadingSpinner"
+    },
+    {
+      "from_file": "tests/test_message_repository.py",
+      "from_func": "test_initialization_with_system_prompt",
+      "to_file": "src/services/message_repository.py",
+      "to_func": "MessageRepository"
+    },
+    {
+      "from_file": "tests/test_chat_orchestrator.py",
+      "from_func": "test_run_keyboard_interrupt",
+      "to_file": "tests/test_chat_orchestrator.py",
+      "to_func": "config"
+    },
+    {
+      "from_file": "tests/test_chat_api_service.py",
+      "from_func": "test_create_streaming_completion",
+      "to_file": "src/services/chat_api_service.py",
+      "to_func": "ChatApiService"
+    },
+    {
+      "from_file": "tests/test_stream_response_processor.py",
+      "from_func": "test_processes_mixed_reasoning_and_content",
+      "to_file": "src/processors/stream_response_processor.py",
+      "to_func": "StreamResponseProcessor"
+    },
+    {
+      "from_file": "tests/test_chat_api_service.py",
+      "from_func": "test_initialization",
+      "to_file": "src/services/chat_api_service.py",
+      "to_func": "ChatApiService"
+    },
+    {
+      "from_file": "tests/test_chat_orchestrator.py",
+      "from_func": "config",
+      "to_file": "src/models/config.py",
+      "to_func": "ChatConfig"
+    },
+    {
+      "from_file": "tests/test_chat_api_service.py",
+      "from_func": "test_create_streaming_completion",
+      "to_file": "src/models/config.py",
+      "to_func": "ChatConfig"
+    },
+    {
+      "from_file": "tests/test_stream_response_processor.py",
+      "from_func": "test_handles_multiline_content",
+      "to_file": "src/services/message_repository.py",
+      "to_func": "MessageRepository"
+    },
+    {
+      "from_file": "tests/test_stream_response_processor.py",
+      "from_func": "test_stops_spinner_on_reasoning",
+      "to_file": "tests/test_stream_response_processor.py",
+      "to_func": "MockChunk"
+    },
+    {
+      "from_file": "tests/test_config_service.py",
+      "from_func": "test_create_chat_config_with_defaults",
+      "to_file": "src/config/config_service.py",
+      "to_func": "ConfigService"
+    },
+    {
+      "from_file": "tests/test_chat_orchestrator.py",
+      "from_func": "test_run_skips_empty_input",
+      "to_file": "tests/test_chat_orchestrator.py",
+      "to_func": "config"
+    },
+    {
+      "from_file": "tests/test_console_output.py",
+      "from_func": "test_display_reasoning_subsequent",
+      "to_file": "src/ui/console_output.py",
+      "to_func": "ConsoleOutput"
+    },
+    {
+      "from_file": "tests/test_stream_response_processor.py",
+      "from_func": "test_handles_empty_chunks",
+      "to_file": "tests/test_stream_response_processor.py",
+      "to_func": "MockChunk"
+    },
+    {
+      "from_file": "tests/test_stream_response_processor.py",
+      "from_func": "test_error_handling_stops_spinner",
+      "to_file": "tests/test_stream_response_processor.py",
+      "to_func": "MockChunk"
+    },
+    {
+      "from_file": "tests/conftest.py",
+      "from_func": "sample_config",
+      "to_file": "src/models/config.py",
+      "to_func": "ChatConfig"
+    },
+    {
+      "from_file": "tests/test_chat_orchestrator.py",
+      "from_func": "test_process_user_message_error_handling",
+      "to_file": "src/orchestrators/chat_orchestrator.py",
+      "to_func": "ChatOrchestrator"
+    },
+    {
+      "from_file": "tests/test_chat_orchestrator.py",
+      "from_func": "test_process_user_message_flow",
+      "to_file": "src/orchestrators/chat_orchestrator.py",
+      "to_func": "ChatOrchestrator"
+    },
+    {
+      "from_file": "tests/test_stream_response_processor.py",
+      "from_func": "test_handles_empty_chunks",
+      "to_file": "src/services/message_repository.py",
+      "to_func": "MessageRepository"
+    },
+    {
+      "from_file": "src/services/message_repository.py",
+      "from_func": "add_user_message",
+      "to_file": "src/models/message.py",
+      "to_func": "Message"
+    },
+    {
+      "from_file": "tests/test_stream_response_processor.py",
+      "from_func": "test_stops_spinner_on_content_without_reasoning",
+      "to_file": "src/processors/stream_response_processor.py",
+      "to_func": "StreamResponseProcessor"
+    },
+    {
+      "from_file": "tests/test_stream_response_processor.py",
+      "from_func": "test_error_handling_stops_spinner",
+      "to_file": "src/services/message_repository.py",
+      "to_func": "MessageRepository"
+    },
+    {
+      "from_file": "tests/test_stream_response_processor.py",
+      "from_func": "test_handles_empty_response",
+      "to_file": "src/services/message_repository.py",
+      "to_func": "MessageRepository"
+    },
+    {
+      "from_file": "tests/test_console_output.py",
+      "from_func": "test_display_goodbye",
+      "to_file": "src/ui/console_output.py",
+      "to_func": "ConsoleOutput"
+    },
+    {
+      "from_file": "tests/test_console_output.py",
+      "from_func": "test_display_content_first_with_reasoning",
+      "to_file": "src/ui/console_output.py",
+      "to_func": "ConsoleOutput"
+    },
+    {
+      "from_file": "tests/test_models.py",
+      "from_func": "test_to_dict_system",
+      "to_file": "src/models/message.py",
+      "to_func": "Message"
+    },
+    {
+      "from_file": "tests/test_console_output.py",
+      "from_func": "test_get_user_input",
+      "to_file": "src/ui/console_output.py",
+      "to_func": "ConsoleOutput"
+    },
+    {
+      "from_file": "src/orchestrators/chat_orchestrator.py",
+      "from_func": "__init__",
+      "to_file": "src/processors/stream_response_processor.py",
+      "to_func": "StreamResponseProcessor"
+    },
+    {
+      "from_file": "src/services/message_repository.py",
+      "from_func": "__init__",
+      "to_file": "src/models/message.py",
+      "to_func": "Message"
+    },
+    {
+      "from_file": "tests/test_chat_orchestrator.py",
+      "from_func": "test_initialization",
+      "to_file": "tests/test_chat_orchestrator.py",
+      "to_func": "config"
+    },
+    {
+      "from_file": "tests/test_stream_response_processor.py",
+      "from_func": "test_processes_content_chunks",
+      "to_file": "tests/test_stream_response_processor.py",
+      "to_func": "MockChunk"
+    },
+    {
+      "from_file": "src/orchestrators/chat_orchestrator.py",
+      "from_func": "__init__",
+      "to_file": "src/services/chat_api_service.py",
+      "to_func": "ChatApiService"
+    },
+    {
+      "from_file": "tests/test_chat_orchestrator.py",
+      "from_func": "test_run_skips_empty_input",
+      "to_file": "src/orchestrators/chat_orchestrator.py",
+      "to_func": "ChatOrchestrator"
+    },
+    {
+      "from_file": "tests/test_stream_response_processor.py",
+      "from_func": "test_stops_spinner_on_reasoning",
+      "to_file": "src/services/message_repository.py",
+      "to_func": "MessageRepository"
+    },
+    {
+      "from_file": "tests/test_console_output.py",
+      "from_func": "test_display_reasoning_first",
+      "to_file": "src/ui/console_output.py",
+      "to_func": "ConsoleOutput"
+    }
+  ],
+  "languages": [
+    "python"
+  ],
+  "timestamp": 1768480473.48563
+}
