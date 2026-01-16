@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type { Span } from '$lib/types';
+	import type { Span, SpanKind } from '$lib/types';
 	import { spanStore } from '$lib/stores/spans.svelte';
 	import { onMount } from 'svelte';
 
@@ -17,6 +17,46 @@
 
 	let fieldHeights = $state<Record<string, number>>({});
 
+	function getBadgeStyle(span: Span): string {
+		const isRunning = span.duration_ms === null;
+		const isError = span.status === 'error';
+		
+		if (isRunning) return 'border-blue-500/50 text-blue-400/70';
+		if (isError) return 'border-red-500/50 text-red-400/70';
+		return 'border-emerald-600/40 text-emerald-500/60';
+	}
+
+	function getSpanDescription(span: Span): string {
+		switch (span.kind) {
+			case 'tool': {
+				const name = span.data.tool_name || span.name;
+				const arg = extractToolArg(span);
+				return arg ? `${name}(${arg})` : name;
+			}
+			case 'llm':
+				return span.data.model ? String(span.data.model) : '';
+			case 'turn':
+				return span.data.response_preview ? String(span.data.response_preview) : '';
+			case 'conversation':
+				return span.data.user_message_preview ? String(span.data.user_message_preview) : '';
+			default:
+				return '';
+		}
+	}
+
+	function extractToolArg(span: Span): string {
+		if (span.data.file_path) return shortenPath(String(span.data.file_path));
+		if (span.data.path) return shortenPath(String(span.data.path));
+		if (span.data.pattern) return String(span.data.pattern).slice(0, 30);
+		return '';
+	}
+
+	function shortenPath(path: string): string {
+		const parts = path.split('/');
+		if (parts.length <= 2) return path;
+		return parts.slice(-2).join('/');
+	}
+
 	onMount(() => {
 		const stored = localStorage.getItem(STORAGE_KEY);
 		if (stored) {
@@ -31,7 +71,12 @@
 		if (storedAutoExpand !== null) {
 			autoExpand = storedAutoExpand === 'true';
 		}
-		updateExpandedSpans();
+	});
+
+	$effect(() => {
+		if (traceSpans.length > 0) {
+			updateExpandedSpans();
+		}
 	});
 
 	function updateExpandedSpans() {
@@ -158,64 +203,80 @@
 <svelte:window onmousemove={onMouseMove} onmouseup={onMouseUp} />
 
 <div class="flex h-full flex-col">
-	<div class="flex items-center gap-2 px-2 py-1.5 border-b border-neutral-800 text-xs text-neutral-400">
-		<label class="flex items-center gap-1.5 cursor-pointer">
+	<div class="flex items-center gap-2 px-3 py-2 border-b border-neutral-800 text-xs text-neutral-400">
+		<label class="flex items-center gap-1.5 cursor-pointer hover:text-neutral-300 transition-colors">
 			<input
 				type="checkbox"
 				checked={autoExpand}
 				onchange={toggleAutoExpand}
-				class="cursor-pointer"
+				class="cursor-pointer accent-indigo-500"
 			/>
-			Auto-expand
+			Expand All
 		</label>
 	</div>
 	<div class="flex flex-1 overflow-hidden">
 	<div class="flex-1 overflow-y-auto border-r border-neutral-800">
 		{#each treeItems as { span, depth } (span.span_id)}
 			{@const isError = span.status === 'error'}
+			{@const isRunning = span.duration_ms === null}
 			{@const isSelected = selectedSpan?.span_id === span.span_id}
 			{@const hasKids = hasChildren(span.span_id)}
 			{@const isExpanded = expandedSpans.has(span.span_id)}
+			{@const description = getSpanDescription(span)}
 
 			<div
-				class="w-full text-left flex items-center gap-2 py-1.5 px-2 hover:bg-neutral-800/50 border-l-2 cursor-pointer
-					{isError ? 'border-red-500' : 'border-transparent'}
-					{isSelected ? 'bg-neutral-800' : ''}"
-				style="padding-left: {depth * 16 + 8}px"
+				class="w-full text-left flex items-center gap-2 py-1.5 px-2 hover:bg-neutral-800/30 cursor-pointer relative
+					{isError ? 'border-l border-red-500/50' : 'border-l border-transparent'}
+					{isSelected ? 'bg-neutral-800/50' : ''}"
+				style="padding-left: {depth * 20 + 8}px"
 				role="button"
 				tabindex="0"
 				onclick={() => selectSpan(span)}
 				onkeydown={(e) => { if (e.key === 'Enter' || e.key === ' ') selectSpan(span); }}
 			>
-				{#if hasKids}
-					<span
-						class="w-4 h-4 flex items-center justify-center text-neutral-500 hover:text-white cursor-pointer"
-						role="button"
-						tabindex="0"
-						onclick={(e) => { e.stopPropagation(); toggleExpand(span.span_id); }}
-						onkeydown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.stopPropagation(); toggleExpand(span.span_id); } }}
+				{#if depth > 0}
+					<div 
+						class="absolute left-0 top-0 bottom-0 pointer-events-none"
+						style="left: {(depth - 1) * 20 + 16}px"
 					>
-						{isExpanded ? '▼' : '▶'}
-					</span>
-				{:else}
-					<span class="w-4"></span>
+						<div class="w-px h-full bg-neutral-800"></div>
+						<div class="absolute top-1/2 w-3 h-px bg-neutral-800" style="left: 0"></div>
+					</div>
 				{/if}
 
-				<span class="text-neutral-500 text-xs font-mono w-12">{span.kind}</span>
+				{#if hasKids}
+					<button
+						class="w-5 h-5 flex items-center justify-center rounded hover:bg-neutral-700/50 text-neutral-500 hover:text-neutral-300"
+						aria-label={isExpanded ? 'Collapse' : 'Expand'}
+						onclick={(e) => { e.stopPropagation(); toggleExpand(span.span_id); }}
+					>
+						<svg class="w-3 h-3 transition-transform {isExpanded ? 'rotate-90' : ''}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+						</svg>
+					</button>
+				{:else}
+					<span class="w-5"></span>
+				{/if}
 
-				<span class="flex-1 text-sm text-neutral-200 truncate">
-					{span.name}
-					{#if span.data.tool_name}
-						<span class="text-neutral-400">({span.data.tool_name})</span>
+				<span class="inline-flex items-center gap-1.5 px-1.5 py-0.5 rounded border text-[10px] font-mono {getBadgeStyle(span)}">
+					{#if isRunning}
+						<span class="w-2 h-2 border border-current border-t-transparent rounded-full animate-spin"></span>
 					{/if}
+					{span.kind}
 				</span>
 
-				<span class="text-xs text-neutral-500 font-mono">
-					{formatDuration(span.duration_ms)}
+				<span class="flex-1 text-sm truncate text-neutral-400 {span.kind === 'tool' ? 'underline decoration-neutral-700 underline-offset-2' : ''}">
+					{description || span.name}
 				</span>
+
+				{#if !isRunning}
+					<span class="text-xs text-neutral-600 font-mono tabular-nums">
+						{formatDuration(span.duration_ms)}
+					</span>
+				{/if}
 
 				{#if isError}
-					<span class="text-xs text-red-400">ERR</span>
+					<span class="text-[10px] text-red-400/70">err</span>
 				{/if}
 			</div>
 		{/each}
@@ -226,59 +287,63 @@
 	</div>
 
 	{#if selectedSpan}
-		<div class="w-[600px] min-w-[400px] overflow-y-auto p-4 bg-neutral-900">
-			<div class="space-y-4">
+		<div class="w-[600px] min-w-[400px] overflow-y-auto p-5 bg-neutral-900">
+			<div class="space-y-5">
 				<div>
-					<h3 class="text-xs text-neutral-500 uppercase tracking-wide mb-1">Span</h3>
+					<h3 class="text-xs text-neutral-400 uppercase tracking-wider font-semibold mb-2 pb-1 border-b border-neutral-700/50">Span</h3>
 					<p class="text-sm text-white font-mono">{selectedSpan.name}</p>
 				</div>
 
-				<div class="grid grid-cols-2 gap-3 text-sm">
+				<div class="grid grid-cols-2 gap-4 text-sm">
 					<div>
-						<span class="text-neutral-500">Kind</span>
-						<p class="text-neutral-200">{selectedSpan.kind}</p>
+						<span class="text-xs text-neutral-500">kind</span>
+						<p class="text-neutral-300 mt-1">
+							<span class="inline-flex items-center px-1.5 py-0.5 rounded border text-[10px] font-mono {getBadgeStyle(selectedSpan)}">
+								{selectedSpan.kind}
+							</span>
+						</p>
 					</div>
 					<div>
-						<span class="text-neutral-500">Duration</span>
-						<p class="text-neutral-200">{formatDuration(selectedSpan.duration_ms)}</p>
+						<span class="text-xs text-neutral-500">duration</span>
+						<p class="text-neutral-300 mt-1 font-mono">{formatDuration(selectedSpan.duration_ms)}</p>
 					</div>
 					<div>
-						<span class="text-neutral-500">Status</span>
-						<p class="{selectedSpan.status === 'error' ? 'text-red-400' : 'text-neutral-200'}">
+						<span class="text-xs text-neutral-500">status</span>
+						<p class="mt-1 {selectedSpan.status === 'error' ? 'text-red-400/80' : 'text-neutral-300'}">
 							{selectedSpan.status}
 						</p>
 					</div>
 					<div>
-						<span class="text-neutral-500">Timestamp</span>
-						<p class="text-neutral-200 text-xs">{selectedSpan.ts}</p>
+						<span class="text-xs text-neutral-500">timestamp</span>
+						<p class="text-neutral-400 text-xs mt-1 font-mono">{selectedSpan.ts}</p>
 					</div>
 				</div>
 
 				{#if selectedSpan.error}
 					<div>
-						<h3 class="text-xs text-red-400 uppercase tracking-wide mb-1">Error</h3>
-						<pre class="text-sm text-red-300 whitespace-pre-wrap font-mono bg-neutral-950 p-2 rounded">{selectedSpan.error}</pre>
+						<h3 class="text-xs text-red-400 uppercase tracking-wider font-semibold mb-2 pb-1 border-b border-red-500/30">Error</h3>
+						<pre class="text-sm text-red-300 whitespace-pre-wrap font-mono bg-neutral-950 p-3 rounded">{selectedSpan.error}</pre>
 					</div>
 				{/if}
 
 				{#if Object.keys(selectedSpan.data).length > 0}
 					<div>
-						<h3 class="text-xs text-neutral-500 uppercase tracking-wide mb-2">Data</h3>
-						<div class="space-y-3">
+						<h3 class="text-xs text-neutral-400 uppercase tracking-wider font-semibold mb-3 pb-1 border-b border-neutral-700/50">Data</h3>
+						<div class="space-y-4">
 							{#each Object.entries(selectedSpan.data) as [key, value]}
 								{@const fixedHeight = getFieldHeight(key)}
 								<div class="relative group">
-									<div class="flex items-center justify-between">
-										<span class="text-xs text-neutral-500">{key}</span>
+									<div class="flex items-center justify-between mb-1">
+										<span class="text-xs text-neutral-400 font-medium">{key}</span>
 										{#if fixedHeight}
 											<button
-												class="text-xs text-neutral-600 hover:text-neutral-400 opacity-0 group-hover:opacity-100"
+												class="text-xs text-neutral-600 hover:text-neutral-400 opacity-0 group-hover:opacity-100 transition-opacity"
 												onclick={() => resetFieldHeight(key)}
 											>reset</button>
 										{/if}
 									</div>
 									<pre
-										class="text-sm text-neutral-300 whitespace-pre-wrap font-mono bg-neutral-950 p-2 rounded mt-0.5 overflow-y-auto max-h-[600px]"
+										class="text-sm text-neutral-300 whitespace-pre-wrap font-mono bg-neutral-950 p-3 rounded overflow-y-auto max-h-[600px]"
 										style={fixedHeight ? `height: ${fixedHeight}px` : ''}
 									>{formatDataValue(value)}</pre>
 									<!-- svelte-ignore a11y_no_static_element_interactions -->
@@ -297,12 +362,14 @@
 					</div>
 				{/if}
 
-				<div class="text-xs text-neutral-600 font-mono space-y-1">
-					<p>trace: {selectedSpan.trace_id}</p>
-					<p>span: {selectedSpan.span_id}</p>
-					{#if selectedSpan.parent_id}
-						<p>parent: {selectedSpan.parent_id}</p>
-					{/if}
+				<div class="pt-3 border-t border-neutral-800">
+					<div class="text-xs text-neutral-500 font-mono space-y-1">
+						<p><span class="text-neutral-600">trace:</span> {selectedSpan.trace_id}</p>
+						<p><span class="text-neutral-600">span:</span> {selectedSpan.span_id}</p>
+						{#if selectedSpan.parent_id}
+							<p><span class="text-neutral-600">parent:</span> {selectedSpan.parent_id}</p>
+						{/if}
+					</div>
 				</div>
 			</div>
 		</div>
