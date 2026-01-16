@@ -2,6 +2,7 @@
 	import type { Span, SpanKind } from '$lib/types';
 	import { spanStore } from '$lib/stores/spans.svelte';
 	import { onMount } from 'svelte';
+	import TimelineGraph from './TimelineGraph.svelte';
 
 	interface Props {
 		traceId: string;
@@ -11,9 +12,11 @@
 	let expandedSpans = $state<Set<string>>(new Set());
 	let selectedSpan = $state<Span | null>(null);
 	let autoExpand = $state<boolean>(true);
+	let viewMode = $state<'tree' | 'timeline'>('tree');
 
 	const STORAGE_KEY = 'trace-viewer-field-heights';
 	const AUTO_EXPAND_KEY = 'trace-viewer-auto-expand';
+	const VIEW_MODE_KEY = 'trace-viewer-view-mode';
 
 	let fieldHeights = $state<Record<string, number>>({});
 
@@ -71,7 +74,17 @@
 		if (storedAutoExpand !== null) {
 			autoExpand = storedAutoExpand === 'true';
 		}
+
+		const storedViewMode = localStorage.getItem(VIEW_MODE_KEY);
+		if (storedViewMode === 'tree' || storedViewMode === 'timeline') {
+			viewMode = storedViewMode;
+		}
 	});
+
+	function setViewMode(mode: 'tree' | 'timeline') {
+		viewMode = mode;
+		localStorage.setItem(VIEW_MODE_KEY, mode);
+	}
 
 	$effect(() => {
 		if (traceSpans.length > 0) {
@@ -203,19 +216,46 @@
 <svelte:window onmousemove={onMouseMove} onmouseup={onMouseUp} />
 
 <div class="flex h-full flex-col">
-	<div class="flex items-center gap-2 px-3 py-2 border-b border-neutral-800 text-xs text-neutral-400">
-		<label class="flex items-center gap-1.5 cursor-pointer hover:text-neutral-300 transition-colors">
-			<input
-				type="checkbox"
-				checked={autoExpand}
-				onchange={toggleAutoExpand}
-				class="cursor-pointer accent-indigo-500"
-			/>
-			Expand All
-		</label>
+	<div class="flex items-center gap-3 px-3 py-2 border-b border-neutral-800 text-xs text-neutral-400">
+		<div class="flex items-center gap-1 bg-neutral-800/50 rounded p-0.5">
+			<button
+				class="px-2 py-1 rounded transition-colors {viewMode === 'tree' ? 'bg-neutral-700 text-neutral-200' : 'hover:text-neutral-300'}"
+				onclick={() => setViewMode('tree')}
+			>
+				Tree
+			</button>
+			<button
+				class="px-2 py-1 rounded transition-colors {viewMode === 'timeline' ? 'bg-neutral-700 text-neutral-200' : 'hover:text-neutral-300'}"
+				onclick={() => setViewMode('timeline')}
+			>
+				Timeline
+			</button>
+		</div>
+
+		{#if viewMode === 'tree'}
+			<label class="flex items-center gap-1.5 cursor-pointer hover:text-neutral-300 transition-colors">
+				<input
+					type="checkbox"
+					checked={autoExpand}
+					onchange={toggleAutoExpand}
+					class="cursor-pointer accent-indigo-500"
+				/>
+				Expand All
+			</label>
+		{/if}
 	</div>
+
 	<div class="flex flex-1 overflow-hidden">
-	<div class="flex-1 overflow-y-auto border-r border-neutral-800">
+	{#if viewMode === 'timeline'}
+		<div class="flex-1 overflow-hidden">
+			<TimelineGraph 
+				spans={traceSpans} 
+				selectedSpanId={selectedSpan?.span_id ?? null}
+				onSelectSpan={selectSpan}
+			/>
+		</div>
+	{:else}
+		<div class="flex-1 overflow-y-auto border-r border-neutral-800">
 		{#each treeItems as { span, depth } (span.span_id)}
 			{@const isError = span.status === 'error'}
 			{@const isRunning = span.duration_ms === null}
@@ -284,7 +324,8 @@
 		{#if treeItems.length === 0}
 			<div class="p-4 text-neutral-500 text-sm">No spans</div>
 		{/if}
-	</div>
+		</div>
+	{/if}
 
 	{#if selectedSpan}
 		<div class="w-[600px] min-w-[400px] overflow-y-auto p-5 bg-neutral-900">
