@@ -16,17 +16,14 @@
 	function formatData(span: Span): string {
 		const parts: string[] = [];
 
-		if (span.kind === 'trace') {
+		if (span.kind === 'conversation') {
+			// No extra data for conversation
+		} else if (span.kind === 'turn') {
 			if (span.data.model) parts.push(`model: ${span.data.model}`);
-			if (span.data.input_len) parts.push(`input: ${span.data.input_len} chars`);
-		} else if (span.kind === 'api') {
+		} else if (span.kind === 'llm') {
 			if (span.data.model) parts.push(`model: ${span.data.model}`);
 			if (span.data.message_count) parts.push(`msgs: ${span.data.message_count}`);
 			if (span.data.tool_count) parts.push(`tools: ${span.data.tool_count}`);
-		} else if (span.kind === 'stream') {
-			if (span.data.chunk_count) parts.push(`chunks: ${span.data.chunk_count}`);
-			if (span.data.first_token_ms !== undefined) parts.push(`TTFT: ${span.data.first_token_ms.toFixed(0)}ms`);
-			if (span.data.tool_call_count) parts.push(`tool calls: ${span.data.tool_call_count}`);
 		} else if (span.kind === 'tool') {
 			if (span.data.tool_name) parts.push(span.data.tool_name);
 			if (span.data.result_len) parts.push(`result: ${span.data.result_len} chars`);

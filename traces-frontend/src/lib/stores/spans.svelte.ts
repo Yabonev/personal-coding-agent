@@ -50,9 +50,10 @@ class SpanStore {
 		if (span.parent_id === null) {
 			traceInfo.root_span_id = span.span_id;
 			traceInfo.duration_ms = span.duration_ms;
-			if (span.data.model) {
-				traceInfo.model = String(span.data.model);
-			}
+		}
+
+		if (span.kind === 'turn' && span.data.model && !traceInfo.model) {
+			traceInfo.model = String(span.data.model);
 		}
 
 		if (span.status === 'error' && (!existing || existing.status !== 'error')) {
@@ -72,6 +73,18 @@ class SpanStore {
 		const info = this.traces.get(traceId);
 		if (!info) return [];
 		return info.span_ids.map((id) => this.spansById.get(id)).filter((s): s is Span => s !== undefined);
+	}
+
+	async loadHistory(baseUrl: string) {
+		try {
+			const response = await fetch(`${baseUrl}/api/spans/history`);
+			const data = await response.json();
+			for (const span of data.spans) {
+				this.addSpan(span);
+			}
+		} catch (e) {
+			console.error('Failed to load history:', e);
+		}
 	}
 
 	connect(url: string) {

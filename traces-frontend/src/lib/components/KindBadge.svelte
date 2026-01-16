@@ -8,9 +8,9 @@
 	let { kind }: Props = $props();
 
 	const kindColors: Record<SpanKind, string> = {
-		trace: 'bg-purple-600',
-		api: 'bg-blue-600',
-		stream: 'bg-cyan-600',
+		conversation: 'bg-purple-600',
+		turn: 'bg-indigo-600',
+		llm: 'bg-blue-600',
 		tool: 'bg-amber-600',
 		internal: 'bg-gray-600'
 	};

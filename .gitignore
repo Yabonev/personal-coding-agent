@@ -1,1 +1,38 @@
-traces
+# Python-generated files
+__pycache__/
+*.py[oc]
+build/
+dist/
+wheels/
+*.egg-info
+
+# Virtual environments
+.venv/
+
+# Traces (SQLite database and WAL files)
+traces.sqlite3*
+
+# Node.js dependencies
+traces-frontend/node_modules/
+
+# Output directories
+traces-frontend/.output/
+traces-frontend/.vercel/
+traces-frontend/.netlify/
+traces-frontend/.wrangler/
+traces-frontend/.svelte-kit/
+traces-frontend/build/
+
+# Vite build artifacts
+traces-frontend/vite.config.js.timestamp-*
+traces-frontend/vite.config.ts.timestamp-*
+
+# OS-specific files
+.DS_Store
+Thumbs.db
+
+# Environment variables
+.env
+.env.*
+!.env.example
+!.env.test

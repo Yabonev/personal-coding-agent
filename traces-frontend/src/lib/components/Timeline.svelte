@@ -4,7 +4,7 @@
 	import SpanRow from './SpanRow.svelte';
 
 	let autoScroll = $state(true);
-	let showKinds = $state<Set<SpanKind>>(new Set(['trace', 'api', 'stream', 'tool', 'internal']));
+	let showKinds = $state<Set<SpanKind>>(new Set(['conversation', 'turn', 'llm', 'tool', 'internal']));
 	let errorsOnly = $state(false);
 
 	let container: HTMLDivElement;
@@ -34,7 +34,7 @@
 		showKinds = new Set(showKinds);
 	}
 
-	const kinds: SpanKind[] = ['trace', 'api', 'stream', 'tool', 'internal'];
+	const kinds: SpanKind[] = ['conversation', 'turn', 'llm', 'tool', 'internal'];
 </script>
 
 <div class="flex flex-col h-full">

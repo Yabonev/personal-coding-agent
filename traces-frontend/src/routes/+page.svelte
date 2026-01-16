@@ -3,7 +3,8 @@
 	import { spanStore } from '$lib/stores/spans.svelte';
 	import SpanTree from '$lib/components/SpanTree.svelte';
 
-	let sseUrl = $state('http://127.0.0.1:8765/api/spans/stream');
+	const baseUrl = 'http://127.0.0.1:8765';
+	let sseUrl = $state(`${baseUrl}/api/spans/stream`);
 
 	const traceList = $derived(
 		Array.from(spanStore.traces.values()).sort(
@@ -20,15 +21,12 @@
 	});
 
 	onMount(() => {
-		spanStore.connect(sseUrl);
+		spanStore.loadHistory(baseUrl).then(() => {
+			spanStore.connect(sseUrl);
+		});
 		return () => spanStore.disconnect();
 	});
 
-	function formatDuration(ms: number | null): string {
-		if (ms === null) return '-';
-		if (ms < 1000) return `${ms.toFixed(0)}ms`;
-		return `${(ms / 1000).toFixed(2)}s`;
-	}
 </script>
 
 <div class="min-h-screen bg-neutral-950 text-neutral-100 flex flex-col">
@@ -64,11 +62,8 @@
 						{trace.error_count > 0 ? 'border-l-2 border-l-red-500' : ''}"
 					onclick={() => (selectedTraceId = trace.trace_id)}
 				>
-					<div class="text-xs text-neutral-400 truncate">{trace.model || 'chat.turn'}</div>
-					<div class="flex items-center justify-between text-xs text-neutral-600 mt-0.5">
-						<span>{trace.span_ids.length} spans</span>
-						<span>{formatDuration(trace.duration_ms)}</span>
-					</div>
+					<div class="text-xs text-neutral-400 font-mono truncate">{trace.trace_id}</div>
+					<div class="text-xs text-neutral-600 mt-0.5">{trace.span_ids.length} spans</div>
 				</button>
 			{/each}
 

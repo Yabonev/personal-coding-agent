@@ -1,5 +1,5 @@
-export type SpanKind = 'trace' | 'api' | 'stream' | 'tool' | 'internal';
-export type SpanStatus = 'ok' | 'error';
+export type SpanKind = 'conversation' | 'turn' | 'llm' | 'tool' | 'internal';
+export type SpanStatus = 'ok' | 'error' | 'running';
 
 export interface SpanData {
 	model?: string;
