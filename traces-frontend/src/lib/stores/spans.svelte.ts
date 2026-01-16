@@ -1,6 +1,6 @@
 import type { Span, TraceInfo } from '$lib/types';
 
-class SpanStore {
+export class SpanStore {
 	spansById = $state<Map<string, Span>>(new Map());
 	childrenByParent = $state<Map<string | null, string[]>>(new Map());
 	traces = $state<Map<string, TraceInfo>>(new Map());
@@ -87,6 +87,12 @@ class SpanStore {
 		}
 	}
 
+	private async fetchHistory(streamUrl: string) {
+		const historyUrl = streamUrl.replace('/api/spans/stream', '/api/spans/history');
+		this.clear();
+		await this.loadHistory(historyUrl.replace('/api/spans/history', ''));
+	}
+
 	connect(url: string) {
 		if (this.eventSource) {
 			this.eventSource.close();
@@ -95,9 +101,10 @@ class SpanStore {
 		this.error = null;
 		this.eventSource = new EventSource(url);
 
-		this.eventSource.onopen = () => {
+		this.eventSource.onopen = async () => {
 			this.connected = true;
 			this.error = null;
+			await this.fetchHistory(url);
 		};
 
 		this.eventSource.addEventListener('span', (event) => {

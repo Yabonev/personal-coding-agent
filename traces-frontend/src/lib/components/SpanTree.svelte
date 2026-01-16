@@ -88,20 +88,32 @@
 
 	const traceSpans = $derived(spanStore.getTraceSpans(traceId));
 
-	function buildTree(parentId: string | null, depth: number): Array<{ span: Span; depth: number }> {
-		const children = traceSpans.filter((s) => s.parent_id === parentId);
+	function buildTree(spans: Span[], parentId: string | null, depth: number): Array<{ span: Span; depth: number }> {
+		const children = spans.filter((s) => s.parent_id === parentId);
 		const result: Array<{ span: Span; depth: number }> = [];
 
 		for (const span of children) {
 			result.push({ span, depth });
 			if (expandedSpans.has(span.span_id)) {
-				result.push(...buildTree(span.span_id, depth + 1));
+				result.push(...buildTree(spans, span.span_id, depth + 1));
 			}
 		}
 		return result;
 	}
 
-	const treeItems = $derived(buildTree(null, 0));
+	const treeItems = $derived.by(() => {
+		const spanIds = new Set(traceSpans.map(s => s.span_id));
+		const localRoots = traceSpans.filter(s => s.parent_id === null || !spanIds.has(s.parent_id));
+		
+		const result: Array<{ span: Span; depth: number }> = [];
+		for (const root of localRoots) {
+			result.push({ span: root, depth: 0 });
+			if (expandedSpans.has(root.span_id)) {
+				result.push(...buildTree(traceSpans, root.span_id, 1));
+			}
+		}
+		return result;
+	});
 
 	function hasChildren(spanId: string): boolean {
 		return traceSpans.filter((s) => s.parent_id === spanId).length > 0;
