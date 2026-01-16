@@ -12,6 +12,7 @@ from ..models.tool import StreamResult
 from ..models.tool import ToolCall
 from ..services.message_repository import MessageRepository
 from ..tracing import TracingConfig
+from ..tracing import get_current_span
 from ..ui.console_output import OutputHandler
 from ..ui.loading_spinner import LoadingSpinner
 
@@ -187,8 +188,36 @@ class StreamResponseProcessor:
             for tc in tool_calls:
                 self._output_handler.display_tool_call(tc.name, tc.arguments)
 
+        self._record_llm_response_trace(state, tool_calls)
+
         return StreamResult(
             content=state.full_content,
             tool_calls=tool_calls,
             has_content=bool(state.full_content),
         )
+
+    def _record_llm_response_trace(
+        self, state: _ProcessingState, tool_calls: list[ToolCall]
+    ) -> None:
+        """Record the final LLM response to the current span."""
+        current_span = get_current_span()
+        if current_span is None:
+            return
+
+        current_span.set(
+            chunk_count=state.chunk_count,
+            tool_call_count=len(tool_calls),
+        )
+
+        if state.first_chunk_time is not None:
+            ttft_ms = (state.first_chunk_time - state.start_time) * 1000
+            current_span.set(time_to_first_token_ms=ttft_ms)
+
+        if self._tracing_config and self._tracing_config.include_sensitive_data:
+            current_span.set(response=state.full_content)
+
+            if tool_calls:
+                tool_calls_data = [
+                    {"name": tc.name, "arguments": tc.arguments} for tc in tool_calls
+                ]
+                current_span.set(tool_calls=str(tool_calls_data))
